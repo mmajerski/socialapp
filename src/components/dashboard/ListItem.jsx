@@ -3,7 +3,7 @@ import { Item, Segment, Icon, List, Button } from "semantic-ui-react";
 
 import ListMember from "./ListMember";
 
-const ListItem = ({ item }) => {
+const ListItem = ({ item, selectItem, deleteItem }) => {
   return (
     <Segment.Group>
       <Segment textAlign="center">
@@ -25,14 +25,23 @@ const ListItem = ({ item }) => {
       </Segment>
       <Segment color="teal" secondary>
         <List horizontal>
-          {item.members.map((member) => {
-            return <ListMember key={member.id} member={member} />;
-          })}
+          {item.members.length > 0 ? (
+            item.members.map((member) => {
+              return <ListMember key={member.id} member={member} />;
+            })
+          ) : (
+            <List.Item>
+              <p>No members yet.</p>
+            </List.Item>
+          )}
         </List>
       </Segment>
       <Segment clearing color="teal">
         <div>{item.description}</div>
-        <Button color="blue" floated="right">
+        <Button color="red" floated="right" onClick={() => deleteItem(item.id)}>
+          Delete
+        </Button>
+        <Button color="blue" floated="right" onClick={() => selectItem(item)}>
           Check Out More
         </Button>
       </Segment>

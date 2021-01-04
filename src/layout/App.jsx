@@ -8,12 +8,28 @@ import "./styles.css";
 
 function App() {
   const [formState, setFormState] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const handleSelectItem = (e) => {
+    setSelectedItem(e);
+    setFormState(true);
+  };
+
+  const handleClearForm = () => {
+    setSelectedItem(null);
+  };
 
   return (
     <>
       <Navbar setFormState={setFormState} />
       <Container className="main">
-        <Dashboard formState={formState} setFormState={setFormState} />
+        <Dashboard
+          formState={formState}
+          setFormState={setFormState}
+          selectItem={handleSelectItem}
+          selectedItem={selectedItem}
+          clearForm={handleClearForm}
+        />
       </Container>
     </>
   );
