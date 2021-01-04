@@ -1,3 +1,7 @@
-.App {
-  text-align: center;
+body {
+  background-color: #dedede;
+}
+
+.ui.main.container {
+  margin-top: 7.5em;
 }
