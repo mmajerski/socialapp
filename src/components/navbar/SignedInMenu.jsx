@@ -4,7 +4,7 @@ import { Menu, Dropdown, Image } from "semantic-ui-react";
 
 import userImg from "../../images/user.png";
 
-const SignedInMenu = ({ signOut, setShowNav }) => {
+const SignedInMenu = ({ signOut }) => {
   return (
     <Menu.Item position="right">
       <Image avatar spaced="right" src={userImg} />
@@ -21,7 +21,6 @@ const SignedInMenu = ({ signOut, setShowNav }) => {
             text="Sign Out"
             icon="log out"
             onClick={() => {
-              setShowNav(false);
               signOut();
             }}
           />

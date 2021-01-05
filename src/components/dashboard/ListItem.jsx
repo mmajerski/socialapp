@@ -1,10 +1,14 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { Item, Segment, Icon, List, Button } from "semantic-ui-react";
+import { deleteItem } from "../../redux/actions/itemActions";
 
 import ListMember from "./ListMember";
 
-const ListItem = ({ item, selectItem, deleteItem }) => {
+const ListItem = ({ item }) => {
+  const dispatch = useDispatch();
+
   return (
     <Segment.Group>
       <Segment textAlign="center">
@@ -39,10 +43,12 @@ const ListItem = ({ item, selectItem, deleteItem }) => {
       </Segment>
       <Segment clearing color="teal">
         <div>{item.description}</div>
-        <Button color="red" floated="right" onClick={() => deleteItem(item.id)}>
+      </Segment>
+      <Segment style={{ display: "flex", justifyContent: "space-between" }}>
+        <Button color="red" onClick={() => dispatch(deleteItem(item.id))}>
           Delete
         </Button>
-        <Button color="blue" floated="right" as={Link} to={`/items/${item.id}`}>
+        <Button color="blue" as={Link} to={`/items/${item.id}`}>
           Check Out More
         </Button>
       </Segment>

@@ -2,16 +2,9 @@ import React from "react";
 
 import ListItem from "./ListItem";
 
-const ListComponent = ({ data, selectItem, deleteItem }) => {
+const ListComponent = ({ data }) => {
   return data.map((item) => {
-    return (
-      <ListItem
-        key={item.id}
-        item={item}
-        selectItem={selectItem}
-        deleteItem={deleteItem}
-      />
-    );
+    return <ListItem key={item.id} item={item} />;
   });
 };
 

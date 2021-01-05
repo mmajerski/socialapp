@@ -4,7 +4,7 @@ import { Menu, Container, Button } from "semantic-ui-react";
 import SignedInMenu from "./SignedInMenu";
 import SignedOutMenu from "./SignedOutMenu";
 
-const Navbar = ({ setFormState, setShowNav }) => {
+const Navbar = () => {
   const history = useHistory();
   const [authenticated, setAuthenticate] = useState(false);
 
@@ -16,7 +16,7 @@ const Navbar = ({ setFormState, setShowNav }) => {
   return (
     <Menu color="purple" fixed="top" inverted pointing secondary>
       <Container>
-        <Menu.Item as={NavLink} exact to="/" onClick={() => setShowNav(false)}>
+        <Menu.Item as={NavLink} exact to="/">
           Home
         </Menu.Item>
         <Menu.Item as={NavLink} to="/items">
@@ -31,7 +31,7 @@ const Navbar = ({ setFormState, setShowNav }) => {
         )}
 
         {authenticated ? (
-          <SignedInMenu signOut={handleSignOut} setShowNav={setShowNav} />
+          <SignedInMenu signOut={handleSignOut} />
         ) : (
           <SignedOutMenu setAuthenticate={setAuthenticate} />
         )}

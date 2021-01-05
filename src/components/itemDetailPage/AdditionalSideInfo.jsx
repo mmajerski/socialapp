@@ -1,9 +1,7 @@
 import React from "react";
 import { Segment, Item } from "semantic-ui-react";
 
-import userImg from "../../images/user.png";
-
-const AdditionalSideInfo = () => {
+const AdditionalSideInfo = ({ members }) => {
   return (
     <>
       <Segment
@@ -14,25 +12,24 @@ const AdditionalSideInfo = () => {
         inverted
         color="brown"
       >
-        2 People Currently
+        {members.length} {members.length > 1 ? "People" : "Person"} Currently
       </Segment>
       <Segment attached textAlign="center">
-        <Item style={{ position: "relative", marginBottom: "1rem" }}>
-          <Item.Image size="tiny" src={userImg} />
-          <Item.Content verticalAlign="middle">
-            <Item.Header as="h3">
-              <p>Mike</p>
-            </Item.Header>
-          </Item.Content>
-        </Item>
-        <Item style={{ position: "relative", marginBottom: "1rem" }}>
-          <Item.Image size="tiny" src={userImg} />
-          <Item.Content verticalAlign="middle">
-            <Item.Header as="h3">
-              <p>Mike</p>
-            </Item.Header>
-          </Item.Content>
-        </Item>
+        {members.map((member) => {
+          return (
+            <Item
+              key={member.id}
+              style={{ position: "relative", marginBottom: "1rem" }}
+            >
+              <Item.Image circular size="tiny" src={member.photoURL} />
+              <Item.Content verticalAlign="middle">
+                <Item.Header as="h3">
+                  <p>{member.name}</p>
+                </Item.Header>
+              </Item.Content>
+            </Item>
+          );
+        })}
       </Segment>
     </>
   );

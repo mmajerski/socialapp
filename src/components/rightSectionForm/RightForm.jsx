@@ -1,15 +1,16 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Header, Segment, Form, Button } from "semantic-ui-react";
 import { v4 as uuidv4 } from "uuid";
+import { createItem, updateItem } from "../../redux/actions/itemActions";
 
-const RightForm = ({
-  setFormState,
-  addItem,
-  selectedItem,
-  clearForm,
-  updateItem
-}) => {
+const RightForm = ({ match, history }) => {
+  const selectedItem = useSelector((state) =>
+    state.item.items.find((item) => item.id === match.params.id)
+  );
+  const dispatch = useDispatch();
+
   const initialFormState = selectedItem || {
     title: "",
     description: "",
@@ -25,17 +26,21 @@ const RightForm = ({
     e.preventDefault();
 
     if (selectedItem) {
-      updateItem({ ...selectedItem, ...form });
+      dispatch(updateItem({ ...selectedItem, ...form }));
+      history.push("/items");
       return;
     }
 
-    addItem({
-      ...form,
-      id: uuidv4(),
-      owner: "Mike",
-      members: [],
-      ownerPhoto: "https://randomuser.me/api/portraits/women/11.jpg"
-    });
+    dispatch(
+      createItem({
+        ...form,
+        id: uuidv4(),
+        owner: "Mike",
+        members: [],
+        ownerPhoto: "https://randomuser.me/api/portraits/women/11.jpg"
+      })
+    );
+
     setForm({
       title: "",
       description: "",
@@ -44,6 +49,8 @@ const RightForm = ({
       category: "",
       date: ""
     });
+
+    history.push("/items");
   };
 
   return (
@@ -120,7 +127,7 @@ const RightForm = ({
           Cancel
         </Button>
         <Button type="submit" floated="left" color="blue">
-          Add
+          Send
         </Button>
       </Form>
     </Segment>
