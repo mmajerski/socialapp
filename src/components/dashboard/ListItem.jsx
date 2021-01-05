@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Item, Segment, Icon, List, Button } from "semantic-ui-react";
 
 import ListMember from "./ListMember";
@@ -41,7 +42,7 @@ const ListItem = ({ item, selectItem, deleteItem }) => {
         <Button color="red" floated="right" onClick={() => deleteItem(item.id)}>
           Delete
         </Button>
-        <Button color="blue" floated="right" onClick={() => selectItem(item)}>
+        <Button color="blue" floated="right" as={Link} to={`/items/${item.id}`}>
           Check Out More
         </Button>
       </Segment>

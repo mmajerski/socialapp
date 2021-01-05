@@ -5,3 +5,12 @@ body {
 .ui.main.container {
   margin-top: 7.5em;
 }
+
+.no-head {
+  display: flex;
+  align-items: center;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url("../images/bg.jpg") !important;
+  background-size: cover !important;
+  height: 100vh;
+}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Header, Segment, Form, Button } from "semantic-ui-react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -115,14 +116,7 @@ const RightForm = ({
             }
           />
         </Form.Field>
-        <Button
-          type="submit"
-          floated="right"
-          onClick={() => {
-            setFormState(false);
-            clearForm();
-          }}
-        >
+        <Button type="submit" floated="right" as={Link} to="/items">
           Cancel
         </Button>
         <Button type="submit" floated="left" color="blue">
