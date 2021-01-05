@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { Header, Segment, Form, Button } from "semantic-ui-react";
+import { Header, Segment, Button, FormField, Label } from "semantic-ui-react";
 import { v4 as uuidv4 } from "uuid";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+
 import { createItem, updateItem } from "../../redux/actions/itemActions";
+import CustomTextArea from "../helpers/CustomTextArea";
+import CustomSelectInput from "../helpers/CustomSelectInput";
+
+import { categories } from "../../utils/categoryOptions";
 
 const RightForm = ({ match, history }) => {
   const selectedItem = useSelector((state) =>
@@ -20,116 +27,116 @@ const RightForm = ({ match, history }) => {
     date: ""
   };
 
-  const [form, setForm] = useState(initialFormState);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (selectedItem) {
-      dispatch(updateItem({ ...selectedItem, ...form }));
-      history.push("/items");
-      return;
-    }
-
-    dispatch(
-      createItem({
-        ...form,
-        id: uuidv4(),
-        owner: "Mike",
-        members: [],
-        ownerPhoto: "https://randomuser.me/api/portraits/women/11.jpg"
-      })
-    );
-
-    setForm({
-      title: "",
-      description: "",
-      city: "",
-      street: "",
-      category: "",
-      date: ""
-    });
-
-    history.push("/items");
-  };
+  const FormSchema = Yup.object().shape({
+    title: Yup.string().required("Title is required"),
+    description: Yup.string().required("Description is required"),
+    city: Yup.string().required("City is required"),
+    street: Yup.string().required("Street is required"),
+    category: Yup.string().required("Category is required"),
+    date: Yup.string().required("Date is required")
+  });
 
   return (
     <Segment clearing>
       <Header>Add Yours!</Header>
-      <Form onSubmit={handleSubmit}>
-        <Form.Field>
-          <input
-            type="text"
-            placeholder="Title"
-            name="title"
-            value={form.title}
-            onChange={(e) =>
-              setForm({ ...form, [e.target.name]: e.target.value })
-            }
-          />
-        </Form.Field>
-        <Form.Field>
-          <input
-            type="text"
-            placeholder="Description"
-            name="description"
-            value={form.description}
-            onChange={(e) =>
-              setForm({ ...form, [e.target.name]: e.target.value })
-            }
-          />
-        </Form.Field>
-        <Form.Field>
-          <input
-            type="text"
-            placeholder="City"
-            name="city"
-            value={form.city}
-            onChange={(e) =>
-              setForm({ ...form, [e.target.name]: e.target.value })
-            }
-          />
-        </Form.Field>
-        <Form.Field>
-          <input
-            type="text"
-            placeholder="Street"
-            name="street"
-            value={form.street}
-            onChange={(e) =>
-              setForm({ ...form, [e.target.name]: e.target.value })
-            }
-          />
-        </Form.Field>
-        <Form.Field>
-          <input
-            type="text"
-            placeholder="Category"
-            name="category"
-            value={form.category}
-            onChange={(e) =>
-              setForm({ ...form, [e.target.name]: e.target.value })
-            }
-          />
-        </Form.Field>
-        <Form.Field>
-          <input
-            type="date"
-            placeholder="Date"
-            name="date"
-            value={form.date}
-            onChange={(e) =>
-              setForm({ ...form, [e.target.name]: e.target.value })
-            }
-          />
-        </Form.Field>
-        <Button type="submit" floated="right" as={Link} to="/items">
-          Cancel
-        </Button>
-        <Button type="submit" floated="left" color="blue">
-          Send
-        </Button>
-      </Form>
+      <Formik
+        initialValues={initialFormState}
+        validationSchema={FormSchema}
+        onSubmit={(values) => {
+          if (selectedItem) {
+            dispatch(updateItem({ ...selectedItem, ...values }));
+            history.push("/items");
+            return;
+          }
+
+          dispatch(
+            createItem({
+              ...values,
+              id: uuidv4(),
+              owner: "Mike",
+              members: [],
+              ownerPhoto: "https://randomuser.me/api/portraits/women/11.jpg"
+            })
+          );
+
+          history.push("/items");
+        }}
+      >
+        {({ isValid, dirty, isSubmitting }) => {
+          return (
+            <Form className="ui form">
+              <FormField>
+                <Field name="title" placeholder="Title" />
+                <ErrorMessage
+                  name="title"
+                  render={(error) => (
+                    <Label basic color="red">
+                      {error}
+                    </Label>
+                  )}
+                />
+              </FormField>
+              <CustomTextArea placeholder="Description" name="description" />
+              <FormField>
+                <Field placeholder="City" name="city" />
+                <ErrorMessage
+                  name="city"
+                  render={(error) => (
+                    <Label basic color="red">
+                      {error}
+                    </Label>
+                  )}
+                />
+              </FormField>
+              <FormField>
+                <Field placeholder="Street" name="street" />
+                <ErrorMessage
+                  name="street"
+                  render={(error) => (
+                    <Label basic color="red">
+                      {error}
+                    </Label>
+                  )}
+                />
+              </FormField>
+              <CustomSelectInput
+                placeholder="Category"
+                name="category"
+                options={categories}
+              />
+              <FormField>
+                <Field placeholder="Date" name="date" type="date" />
+                <ErrorMessage
+                  name="date"
+                  render={(error) => (
+                    <Label basic color="red">
+                      {error}
+                    </Label>
+                  )}
+                />
+              </FormField>
+              <Button
+                type="submit"
+                floated="right"
+                as={Link}
+                to="/items"
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                floated="left"
+                color="blue"
+                disabled={!isValid || !dirty || isSubmitting}
+                loading={isSubmitting}
+              >
+                Send
+              </Button>
+            </Form>
+          );
+        }}
+      </Formik>
     </Segment>
   );
 };

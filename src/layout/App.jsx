@@ -10,12 +10,14 @@ import RightForm from "../components/rightSectionForm/RightForm";
 
 import "./styles.css";
 import Playground from "../components/playground/Playground";
+import ModalHandler from "../components/modal/ModalHandler";
 
 function App() {
   const { key } = useLocation();
 
   return (
     <>
+      <ModalHandler />
       <Route exact path="/" component={StartPage} />
       <Route
         path="(/.+)"
