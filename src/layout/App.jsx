@@ -1,6 +1,8 @@
 import React from "react";
 import { Switch, Route, useLocation } from "react-router-dom";
 import { Container } from "semantic-ui-react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Dashboard from "../components/dashboard/Dashboard";
 import StartPage from "../components/startPage/StartPage";
@@ -18,6 +20,17 @@ function App() {
   return (
     <>
       <ModalHandler />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Route exact path="/" component={StartPage} />
       <Route
         path="(/.+)"
