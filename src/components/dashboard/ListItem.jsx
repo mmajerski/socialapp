@@ -25,7 +25,9 @@ const ListItem = ({ item }) => {
           <Icon name="calendar alternate" /> {item.date}
         </div>
         <div>
-          <Icon name="location arrow" /> {item.city}, {item.street}
+          <Icon name="location arrow" />
+          <p>{item.city.address}</p>
+          <p>{item.street.address}</p>
         </div>
       </Segment>
       <Segment color="teal" secondary>

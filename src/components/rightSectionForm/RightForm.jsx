@@ -11,6 +11,7 @@ import CustomTextArea from "../helpers/CustomTextArea";
 import CustomSelectInput from "../helpers/CustomSelectInput";
 
 import { categories } from "../../utils/categoryOptions";
+import AutocompleteInput from "../google/AutocompleteInput";
 
 const RightForm = ({ match, history }) => {
   const selectedItem = useSelector((state) =>
@@ -21,8 +22,8 @@ const RightForm = ({ match, history }) => {
   const initialFormState = selectedItem || {
     title: "",
     description: "",
-    city: "",
-    street: "",
+    city: { address: "", latLng: null },
+    street: { address: "", latLng: null },
     category: "",
     date: ""
   };
@@ -30,8 +31,12 @@ const RightForm = ({ match, history }) => {
   const FormSchema = Yup.object().shape({
     title: Yup.string().required("Title is required"),
     description: Yup.string().required("Description is required"),
-    city: Yup.string().required("City is required"),
-    street: Yup.string().required("Street is required"),
+    city: Yup.object().shape({
+      address: Yup.string().required("City is required")
+    }),
+    street: Yup.object().shape({
+      address: Yup.string().required("Street is required")
+    }),
     category: Yup.string().required("Category is required"),
     date: Yup.string().required("Date is required")
   });
@@ -62,7 +67,7 @@ const RightForm = ({ match, history }) => {
           history.push("/items");
         }}
       >
-        {({ isValid, dirty, isSubmitting }) => {
+        {({ isValid, dirty, isSubmitting, values }) => {
           return (
             <Form className="ui form">
               <FormField>
@@ -77,28 +82,8 @@ const RightForm = ({ match, history }) => {
                 />
               </FormField>
               <CustomTextArea placeholder="Description" name="description" />
-              <FormField>
-                <Field placeholder="City" name="city" />
-                <ErrorMessage
-                  name="city"
-                  render={(error) => (
-                    <Label basic color="red">
-                      {error}
-                    </Label>
-                  )}
-                />
-              </FormField>
-              <FormField>
-                <Field placeholder="Street" name="street" />
-                <ErrorMessage
-                  name="street"
-                  render={(error) => (
-                    <Label basic color="red">
-                      {error}
-                    </Label>
-                  )}
-                />
-              </FormField>
+              <AutocompleteInput placeholder="City" name="city" />
+              <AutocompleteInput placeholder="Street" name="street" />
               <CustomSelectInput
                 placeholder="Category"
                 name="category"
