@@ -8,6 +8,7 @@ import categoryReducer from "./categoryReducer";
 import errorReducer from "./errorReducer";
 import loaderReducer from "./loaderReducer";
 import initAppReducer from "./initAppReducer";
+import profileReducer from "./profileReducer";
 
 const rootReducer = combineReducers({
   test: testReducer,
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
   category: categoryReducer,
   error: errorReducer,
   loader: loaderReducer,
-  initApp: initAppReducer
+  initApp: initAppReducer,
+  profile: profileReducer
 });
 
 export default rootReducer;

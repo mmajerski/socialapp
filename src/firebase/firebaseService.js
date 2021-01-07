@@ -60,11 +60,27 @@ export const cancelItem = (item) => {
 export const setUserProfile = (user) => {
   return db
     .collection("users")
-    .doc(user.id)
+    .doc(user.uid)
     .set({
       displayName: user.displayName,
       email: user.email,
       photoURL: user.photoURL || null,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
+};
+
+export const getUserProfile = (userId) => {
+  return db.collection("users").doc(userId);
+};
+
+export const updateUserProfile = async (profile) => {
+  const user = firebase.auth().currentUser;
+  try {
+    if (user.displayName !== profile.displayName) {
+      await user.updateProfile({ displayName: profile.displayName });
+    }
+    return await db.collection("users").doc(user.uid).update(profile);
+  } catch (error) {
+    throw error;
+  }
 };

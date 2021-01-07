@@ -15,6 +15,7 @@ import Playground from "../components/playground/Playground";
 import ModalHandler from "../components/modal/ModalHandler";
 import Error from "../components/error/Error";
 import Account from "../components/auth/Account";
+import ProfileContainer from "../components/userProfile/ProfileContainer";
 
 function App() {
   const { key } = useLocation();
@@ -49,6 +50,7 @@ function App() {
                 component={RightForm}
               />
               <Route path="/account" component={Account} />
+              <Route path="/profile/:id" component={ProfileContainer} />
               <Route path="/error" component={Error} />
             </Switch>
           </Container>
