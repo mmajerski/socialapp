@@ -23,7 +23,8 @@ const ItemDetail = ({ match }) => {
   useFirebaseDocument({
     firestoreQuery: () => getItemListener(match.params.id),
     onDataReceived: (item) => dispatch(getItems([item])),
-    dependencies: [match.params.id]
+    dependencies: [match.params.id],
+    shouldExecute: true
   });
 
   if (!item && !errorMessage) {

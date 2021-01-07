@@ -4,6 +4,7 @@ import ReduxThunk from "redux-thunk";
 import logger from "redux-logger";
 
 import rootReducer from "./reducers";
+import { checkAuth } from "./actions/authActions";
 
 const middleware = [ReduxThunk, logger];
 
@@ -14,5 +15,7 @@ const store = createStore(
     // other store enhancers if any
   )
 );
+
+store.dispatch(checkAuth());
 
 export default store;

@@ -29,6 +29,7 @@ export const useFirebaseDocument = ({
               message: "Could not find this resource."
             })
           );
+          dispatch(clearLoader());
           return;
         }
         onDataReceived(extractDataFromDoc(snapshot));

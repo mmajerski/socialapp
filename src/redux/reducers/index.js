@@ -7,6 +7,7 @@ import authReducer from "./authReducer";
 import categoryReducer from "./categoryReducer";
 import errorReducer from "./errorReducer";
 import loaderReducer from "./loaderReducer";
+import initAppReducer from "./initAppReducer";
 
 const rootReducer = combineReducers({
   test: testReducer,
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
   auth: authReducer,
   category: categoryReducer,
   error: errorReducer,
-  loader: loaderReducer
+  loader: loaderReducer,
+  initApp: initAppReducer
 });
 
 export default rootReducer;

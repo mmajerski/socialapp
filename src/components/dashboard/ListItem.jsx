@@ -7,7 +7,6 @@ import { deleteItemFromFirebase } from "../../firebase/firebaseService";
 import ListMember from "./ListMember";
 
 const ListItem = ({ item }) => {
-  console.log(item);
   return (
     <Segment.Group>
       <Segment textAlign="center">

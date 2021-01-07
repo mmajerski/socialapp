@@ -56,3 +56,15 @@ export const cancelItem = (item) => {
     isCancelled: !item.isCancelled
   });
 };
+
+export const setUserProfile = (user) => {
+  return db
+    .collection("users")
+    .doc(user.id)
+    .set({
+      displayName: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL || null,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+};

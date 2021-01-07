@@ -13,7 +13,10 @@ const authReducer = (state = INITIAL_STATE, { type, payload }) => {
         authenticated: true,
         currentUser: {
           email: payload.email,
-          ownerPhoto: "https://randomuser.me/api/portraits/women/11.jpg"
+          ownerPhoto: payload.photoURL || null,
+          uid: payload.uid,
+          displayName: payload.displayName,
+          providerId: payload.providerData[0].providerId
         }
       };
     case SIGN_OUT: {

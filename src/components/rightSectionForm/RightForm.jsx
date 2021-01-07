@@ -68,6 +68,11 @@ const RightForm = ({ match, history }) => {
     try {
       await cancelItem(item);
       setToggleActive(false);
+      notification(
+        `Item changed to ${
+          selectedItem.isCancelled ? "active" : "inactive"
+        } state!`
+      );
     } catch (error) {
       setToggleActive(true);
       notification(error.message, "error");
@@ -98,15 +103,16 @@ const RightForm = ({ match, history }) => {
         onSubmit={async (values, { setSubmitting }) => {
           try {
             if (selectedItem) {
-              // dispatch(updateItem({ ...selectedItem, ...values }));
               await updateItemInFirebase(values);
-              history.push("/items");
               setSubmitting(false);
+              notification("Updated successfully!");
+              history.push("/items");
               return;
             }
 
             await addItemToFirebase(values);
             setSubmitting(false);
+            notification("Created successfully!");
             history.push("/items");
           } catch (error) {
             notification(error.message, "error");

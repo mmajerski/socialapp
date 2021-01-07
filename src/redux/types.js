@@ -16,3 +16,5 @@ export const CLEAR_ERROR = "CLEAR_ERROR";
 
 export const SET_LOADER = "SET_LOADER";
 export const CLEAR_LOADER = "CLEAR_LOADER";
+
+export const APP_INIT = "APP_INIT";

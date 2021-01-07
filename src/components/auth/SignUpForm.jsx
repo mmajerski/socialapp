@@ -6,30 +6,31 @@ import { useDispatch } from "react-redux";
 
 import ModalContainer from "../modal/ModalContainer";
 import { closeModal } from "../../redux/actions/modalActions";
-import { signInWithEmailAndPass } from "../../firebase/authService";
+import { signUpUser } from "../../firebase/authService";
 import { notification } from "../../utils/notification";
 import CustomLogin from "../helpers/CustomLogin";
 
-const LoginFrom = () => {
+const SignUpForm = () => {
   const dispatch = useDispatch();
 
   return (
-    <ModalContainer size="mini" header="Sign In">
+    <ModalContainer size="mini" header="Sign up">
       <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ username: "", email: "", password: "" }}
         onSubmit={async (values, { setSubmitting, setErrors }) => {
           setSubmitting(true);
           try {
-            await signInWithEmailAndPass(values);
+            await signUpUser(values);
             setSubmitting(false);
             dispatch(closeModal());
-            notification("Sign in successfully!");
+            notification("Sign up successfully!");
           } catch (error) {
             setSubmitting(false);
-            setErrors({ error: "Inavlid email or password" });
+            setErrors({ error: error.message });
           }
         }}
         validationSchema={Yup.object({
+          username: Yup.string().required(),
           email: Yup.string().required().email(),
           password: Yup.string().required()
         })}
@@ -37,6 +38,17 @@ const LoginFrom = () => {
         {({ isValid, dirty, isSubmitting, errors }) => {
           return (
             <Form className="ui form">
+              <FormField>
+                <Field name="username" placeholder="Username" />
+                <ErrorMessage
+                  name="username"
+                  render={(error) => (
+                    <Label basic color="red">
+                      {error}
+                    </Label>
+                  )}
+                />
+              </FormField>
               <FormField>
                 <Field name="email" placeholder="Email" />
                 <ErrorMessage
@@ -73,7 +85,7 @@ const LoginFrom = () => {
                 fluid
                 size="large"
               >
-                Sign In
+                Sign Up
               </Button>
               <Divider horizontal>Or</Divider>
               <CustomLogin />
@@ -85,4 +97,4 @@ const LoginFrom = () => {
   );
 };
 
-export default LoginFrom;
+export default SignUpForm;

@@ -2,10 +2,12 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 import LoginForm from "../../components/auth/LoginForm";
+import SignUpForm from "../../components/auth/SignUpForm";
 
 const ModalHandler = () => {
   const modalsAvailable = {
-    LoginForm
+    LoginForm,
+    SignUpForm
   };
   const currentModal = useSelector((state) => state.modal);
   let modalToRender;
@@ -15,7 +17,7 @@ const ModalHandler = () => {
     modalToRender = <ModalComponent {...otherProps} />;
   }
 
-  return <span>{modalToRender}</span>;
+  return <>{modalToRender}</>;
 };
 
 export default ModalHandler;

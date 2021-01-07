@@ -14,6 +14,7 @@ import "./styles.css";
 import Playground from "../components/playground/Playground";
 import ModalHandler from "../components/modal/ModalHandler";
 import Error from "../components/error/Error";
+import Account from "../components/auth/Account";
 
 function App() {
   const { key } = useLocation();
@@ -47,6 +48,7 @@ function App() {
                 path={["/createItem", "/settings/:id"]}
                 component={RightForm}
               />
+              <Route path="/account" component={Account} />
               <Route path="/error" component={Error} />
             </Switch>
           </Container>
