@@ -1,14 +1,20 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Grid } from "semantic-ui-react";
-import { setCategoryRedux } from "../../redux/actions/categoryActions";
-import Filters from "./Filters";
 
+import { getItems } from "../../redux/actions/itemActions";
+import { getItemsListener } from "../../firebase/firebaseService";
+import { setCategoryRedux } from "../../redux/actions/categoryActions";
+
+import Filters from "./Filters";
 import List from "./List";
+import { useFirebaseCollection } from "../../utils/useFirebaseCollection";
+import Loading from "../../layout/Loading";
 
 const Dashboard = () => {
   const { items } = useSelector((state) => state.item);
   const { category } = useSelector((state) => state.category);
+  const { loading } = useSelector((state) => state.loader);
   const dispatch = useDispatch();
 
   let itemsToRender;
@@ -18,11 +24,21 @@ const Dashboard = () => {
     itemsToRender = items;
   }
 
+  useFirebaseCollection({
+    firestoreQuery: () => getItemsListener(),
+    onDataReceived: (items) => dispatch(getItems(items)),
+    dependencies: [dispatch]
+  });
+
   useEffect(() => {
     return () => {
       dispatch(setCategoryRedux(""));
     };
   }, [dispatch]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Grid>
@@ -30,7 +46,7 @@ const Dashboard = () => {
         {itemsToRender.length > 0 ? (
           <List data={itemsToRender} />
         ) : (
-          <p>There is not item to display.</p>
+          <p>There is no item to display.</p>
         )}
       </Grid.Column>
       <Grid.Column floated="right" width={6}>

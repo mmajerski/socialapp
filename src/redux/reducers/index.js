@@ -5,13 +5,17 @@ import itemReducer from "./itemReducer";
 import modalReducer from "./modalReducer";
 import authReducer from "./authReducer";
 import categoryReducer from "./categoryReducer";
+import errorReducer from "./errorReducer";
+import loaderReducer from "./loaderReducer";
 
 const rootReducer = combineReducers({
   test: testReducer,
   item: itemReducer,
   modal: modalReducer,
   auth: authReducer,
-  category: categoryReducer
+  category: categoryReducer,
+  error: errorReducer,
+  loader: loaderReducer
 });
 
 export default rootReducer;

@@ -1,14 +1,13 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { Item, Segment, Icon, List, Button } from "semantic-ui-react";
-import { deleteItem } from "../../redux/actions/itemActions";
+import { Item, Segment, Icon, List, Button, Label } from "semantic-ui-react";
+
+import { deleteItemFromFirebase } from "../../firebase/firebaseService";
 
 import ListMember from "./ListMember";
 
 const ListItem = ({ item }) => {
-  const dispatch = useDispatch();
-
+  console.log(item);
   return (
     <Segment.Group>
       <Segment textAlign="center">
@@ -17,6 +16,11 @@ const ListItem = ({ item }) => {
           <Item.Content>
             <Item.Header>{item.title}</Item.Header>
             <Item.Description>{item.owner}</Item.Description>
+            {item.isCancelled && (
+              <Label floating style={{ top: "10px", left: "90%" }} color="grey">
+                Inactive
+              </Label>
+            )}
           </Item.Content>
         </Item>
       </Segment>
@@ -47,7 +51,7 @@ const ListItem = ({ item }) => {
         <div>{item.description}</div>
       </Segment>
       <Segment style={{ display: "flex", justifyContent: "space-between" }}>
-        <Button color="red" onClick={() => dispatch(deleteItem(item.id))}>
+        <Button color="red" onClick={() => deleteItemFromFirebase(item.id)}>
           Delete
         </Button>
         <Button color="blue" as={Link} to={`/items/${item.id}`}>

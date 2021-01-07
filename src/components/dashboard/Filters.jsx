@@ -22,7 +22,7 @@ const Filters = () => {
         >
           <h3>Category</h3>
           <Select
-            placeholder="Select your country"
+            placeholder="Select category"
             options={categories}
             value={category}
             onChange={(e, data) => {

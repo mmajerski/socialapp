@@ -1,22 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { Header, Segment, Button, FormField, Label } from "semantic-ui-react";
-import { v4 as uuidv4 } from "uuid";
+import { Link, Redirect } from "react-router-dom";
+import {
+  Header,
+  Segment,
+  Button,
+  FormField,
+  Label,
+  Confirm
+} from "semantic-ui-react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-import { createItem, updateItem } from "../../redux/actions/itemActions";
+import { getItems } from "../../redux/actions/itemActions";
 import CustomTextArea from "../helpers/CustomTextArea";
 import CustomSelectInput from "../helpers/CustomSelectInput";
 
 import { categories } from "../../utils/categoryOptions";
 import AutocompleteInput from "../google/AutocompleteInput";
+import { useFirebaseDocument } from "../../utils/useFirebaseDocument";
+import {
+  addItemToFirebase,
+  cancelItem,
+  getItemListener,
+  updateItemInFirebase
+} from "../../firebase/firebaseService";
+import Loading from "../../layout/Loading";
+import { notification } from "../../utils/notification";
 
 const RightForm = ({ match, history }) => {
+  const [toggleActive, setToggleActive] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
   const selectedItem = useSelector((state) =>
     state.item.items.find((item) => item.id === match.params.id)
   );
+  const { loading } = useSelector((state) => state.loader);
+  const { message: errorMessage } = useSelector((state) => state.error);
   const dispatch = useDispatch();
 
   const initialFormState = selectedItem || {
@@ -41,30 +61,57 @@ const RightForm = ({ match, history }) => {
     date: Yup.string().required("Date is required")
   });
 
+  const handleActiveState = async (item) => {
+    setConfirmOpen(false);
+    setToggleActive(true);
+
+    try {
+      await cancelItem(item);
+      setToggleActive(false);
+    } catch (error) {
+      setToggleActive(true);
+      notification(error.message, "error");
+    }
+  };
+
+  useFirebaseDocument({
+    firestoreQuery: () => getItemListener(match.params.id),
+    onDataReceived: (item) => dispatch(getItems([item])),
+    dependencies: [match.params.id],
+    shouldExecute: !!match.params.id
+  });
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (errorMessage) {
+    return <Redirect to="/error" />;
+  }
+
   return (
     <Segment clearing>
       <Header>Add Yours!</Header>
       <Formik
         initialValues={initialFormState}
         validationSchema={FormSchema}
-        onSubmit={(values) => {
-          if (selectedItem) {
-            dispatch(updateItem({ ...selectedItem, ...values }));
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            if (selectedItem) {
+              // dispatch(updateItem({ ...selectedItem, ...values }));
+              await updateItemInFirebase(values);
+              history.push("/items");
+              setSubmitting(false);
+              return;
+            }
+
+            await addItemToFirebase(values);
+            setSubmitting(false);
             history.push("/items");
-            return;
+          } catch (error) {
+            notification(error.message, "error");
+            setSubmitting(false);
           }
-
-          dispatch(
-            createItem({
-              ...values,
-              id: uuidv4(),
-              owner: "Mike",
-              members: [],
-              ownerPhoto: "https://randomuser.me/api/portraits/women/11.jpg"
-            })
-          );
-
-          history.push("/items");
         }}
       >
         {({ isValid, dirty, isSubmitting, values }) => {
@@ -109,6 +156,17 @@ const RightForm = ({ match, history }) => {
               >
                 Cancel
               </Button>
+              {selectedItem && (
+                <Button
+                  loading={toggleActive}
+                  type="button"
+                  floated="right"
+                  color={selectedItem.isCancelled ? "green" : "red"}
+                  onClick={() => setConfirmOpen(true)}
+                >
+                  {selectedItem.isCancelled ? "Reactivate" : "Deactivate"}
+                </Button>
+              )}
               <Button
                 type="submit"
                 floated="left"
@@ -122,6 +180,11 @@ const RightForm = ({ match, history }) => {
           );
         }}
       </Formik>
+      <Confirm
+        open={confirmOpen}
+        onCancel={() => setConfirmOpen(false)}
+        onConfirm={() => handleActiveState(selectedItem)}
+      />
     </Segment>
   );
 };

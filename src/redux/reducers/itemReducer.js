@@ -1,8 +1,7 @@
-import { dummyData } from "../../utils/dummyData";
-import { CREATE_ITEM, DELETE_ITEM, UPDATE_ITEM } from "../types";
+import { CREATE_ITEM, DELETE_ITEM, GET_ITEMS, UPDATE_ITEM } from "../types";
 
 const INITIAL_STATE = {
-  items: dummyData
+  items: []
 };
 
 const itemReducer = (state = INITIAL_STATE, { type, payload }) => {
@@ -21,6 +20,11 @@ const itemReducer = (state = INITIAL_STATE, { type, payload }) => {
       return {
         ...state,
         items: [...state.items.filter((item) => item.id !== payload)]
+      };
+    case GET_ITEMS:
+      return {
+        ...state,
+        items: [...payload]
       };
     default:
       return state;
