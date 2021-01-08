@@ -1,6 +1,8 @@
 import React from "react";
 import { Tab } from "semantic-ui-react";
+
 import About from "./About";
+import ImageComponent from "./ImageComponent";
 
 const ProfileContent = ({ profile, isCurrentUser }) => {
   const panes = [
@@ -8,13 +10,30 @@ const ProfileContent = ({ profile, isCurrentUser }) => {
       menuItem: "About",
       render: () => <About profile={profile} isCurrentUser={isCurrentUser} />
     },
-    { menuItem: "Images", render: () => <Tab.Pane>Images</Tab.Pane> },
+    {
+      menuItem: "Images",
+      render: () => (
+        <ImageComponent profile={profile} isCurrentUser={isCurrentUser} />
+      )
+    },
     { menuItem: "Items", render: () => <Tab.Pane>Items</Tab.Pane> },
     { menuItem: "Followers", render: () => <Tab.Pane>Followers</Tab.Pane> },
     { menuItem: "Following", render: () => <Tab.Pane>Following</Tab.Pane> }
   ];
 
-  return <Tab panes={panes} menu={{ secondary: true, pointing: true }} />;
+  return (
+    <>
+      {isCurrentUser ? (
+        <Tab
+          panes={panes}
+          menu={{ secondary: true, pointing: true }}
+          activeIndex={1}
+        />
+      ) : (
+        <></>
+      )}
+    </>
+  );
 };
 
 export default ProfileContent;

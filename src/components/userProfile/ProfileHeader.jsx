@@ -16,7 +16,7 @@ const ProfileHeader = ({ profile, isCurrentUser }) => {
       <Segment textAlign="center">
         <Item.Group>
           <Item>
-            <Item.Image avatar size="small" src={userImg} />
+            <Item.Image avatar size="small" src={profile.photoURL || userImg} />
             <Item.Content verticalAlign="middle">
               <h1>{profile.displayName}</h1>
             </Item.Content>

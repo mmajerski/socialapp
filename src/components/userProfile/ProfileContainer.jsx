@@ -25,7 +25,8 @@ const ProfileContainer = ({ match }) => {
 
   if (
     (loading && !selectedUserProfile) ||
-    (!selectedUserProfile && !errorMessage)
+    (!selectedUserProfile && !errorMessage) ||
+    !currentUser
   ) {
     return <Loading />;
   }

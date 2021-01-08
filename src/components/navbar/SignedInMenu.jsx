@@ -10,7 +10,7 @@ import { notification } from "../../utils/notification";
 const SignedInMenu = () => {
   const history = useHistory();
 
-  const { currentUserProfile } = useSelector((state) => state.profile);
+  const { currentUser } = useSelector((state) => state.auth);
 
   const logOutHandler = async () => {
     try {
@@ -22,18 +22,14 @@ const SignedInMenu = () => {
     }
   };
 
-  if (!currentUserProfile) {
+  if (!currentUser) {
     return <></>;
   }
 
   return (
     <Menu.Item position="right">
-      <Image
-        avatar
-        spaced="right"
-        src={currentUserProfile.ownerPhoto || userImg}
-      />
-      <Dropdown pointing="top left" text={currentUserProfile.displayName}>
+      <Image avatar spaced="right" src={currentUser.ownerPhoto || userImg} />
+      <Dropdown pointing="top left" text={currentUser.displayName}>
         <Dropdown.Menu>
           <Dropdown.Item
             as={Link}
@@ -45,7 +41,7 @@ const SignedInMenu = () => {
             text="Profile"
             icon="user circle"
             as={Link}
-            to={`/profile/${currentUserProfile.id}`}
+            to={`/profile/${currentUser.uid}`}
           />
           <Dropdown.Item
             text="Account"

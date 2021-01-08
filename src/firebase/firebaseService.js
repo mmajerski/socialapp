@@ -23,6 +23,14 @@ export const getItemListener = (itemId) => {
   return db.collection("items").doc(itemId);
 };
 
+export const getPhotosListener = (uid) => {
+  return db
+    .collection("users")
+    .doc(uid)
+    .collection("photos")
+    .orderBy("createdAt", "desc");
+};
+
 export const addItemToFirebase = (item) => {
   return db.collection("items").add({
     ...item,
@@ -80,6 +88,80 @@ export const updateUserProfile = async (profile) => {
       await user.updateProfile({ displayName: profile.displayName });
     }
     return await db.collection("users").doc(user.uid).update(profile);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const uploadImage = (file, filename) => {
+  const user = firebase.auth().currentUser;
+  const storageRef = firebase.storage().ref();
+  return storageRef.child(`${user.uid}/images/${filename}`).put(file);
+};
+
+export const updateUserProfileWithImage = async (downloadURL, filename) => {
+  const user = firebase.auth().currentUser;
+  const userDocRef = db.collection("users").doc(user.uid);
+  try {
+    const userDoc = await userDocRef.get();
+    if (!userDoc.data().photoURL) {
+      await db.collection("users").doc(user.uid).update({
+        photoURL: downloadURL
+      });
+      await user.updateProfile({
+        photoURL: downloadURL
+      });
+    }
+
+    return await db.collection("users").doc(user.uid).collection("photos").add({
+      name: filename,
+      url: downloadURL,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteImageFromProfile = async (image) => {
+  const user = firebase.auth().currentUser;
+
+  // const storageRef = firebase.storage().ref();
+  // await storageRef.child(`${user.uid}/images/${image.name}`).delete(image);
+
+  const userPgotosDocRef = db
+    .collection("users")
+    .doc(user.uid)
+    .collection("photos")
+    .doc(image.id);
+  try {
+    const userPhotosDoc = await userPgotosDocRef.get();
+    const userPhotosDocId = userPhotosDoc.id;
+    if (user.photoURL === image.url) {
+      await user.updateProfile({ photoURL: null });
+    }
+
+    await db.collection("users").doc(user.uid).update({ photoURL: null });
+
+    return await db
+      .collection("users")
+      .doc(user.uid)
+      .collection("photos")
+      .doc(userPhotosDocId)
+      .delete();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const setImageAsMain = async (image) => {
+  const user = firebase.auth().currentUser;
+  try {
+    await user.updateProfile({ photoURL: image.url });
+    return await db
+      .collection("users")
+      .doc(user.uid)
+      .update({ photoURL: image.url });
   } catch (error) {
     throw error;
   }
