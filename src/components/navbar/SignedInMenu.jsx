@@ -14,8 +14,8 @@ const SignedInMenu = () => {
 
   const logOutHandler = async () => {
     try {
-      await signOutUser();
       history.push("/");
+      await signOutUser();
       notification("Successfully signed out!");
     } catch (error) {
       notification(error.message, "error");
@@ -28,8 +28,8 @@ const SignedInMenu = () => {
 
   return (
     <Menu.Item position="right">
-      <Image avatar spaced="right" src={currentUser.ownerPhoto || userImg} />
-      <Dropdown pointing="top left" text={currentUser.displayName}>
+      <Image avatar spaced="right" src={currentUser?.ownerPhoto || userImg} />
+      <Dropdown pointing="top left" text={currentUser?.displayName}>
         <Dropdown.Menu>
           <Dropdown.Item
             as={Link}
@@ -41,7 +41,7 @@ const SignedInMenu = () => {
             text="Profile"
             icon="user circle"
             as={Link}
-            to={`/profile/${currentUser.uid}`}
+            to={`/profile/${currentUser?.uid}`}
           />
           <Dropdown.Item
             text="Account"

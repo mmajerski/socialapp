@@ -10,11 +10,14 @@ import {
   uploadImage
 } from "../../firebase/firebaseService";
 import { notification } from "../../utils/notification";
+import { useDispatch } from "react-redux";
+import { updateProfileImage } from "../../redux/actions/authActions";
 
 const ImageUploadWidget = ({ setAddMode }) => {
   const [file, setFile] = useState([]);
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const handleUploadImage = () => {
     setLoading(true);
@@ -34,6 +37,7 @@ const ImageUploadWidget = ({ setAddMode }) => {
         uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
           updateUserProfileWithImage(downloadURL, filename)
             .then(() => {
+              dispatch(updateProfileImage(downloadURL));
               setLoading(false);
               handleCancelCrop();
               setAddMode(false);

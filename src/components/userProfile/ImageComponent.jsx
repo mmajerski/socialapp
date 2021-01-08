@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Segment, Tab } from "semantic-ui-react";
 import {
   deleteImageFromProfile,
@@ -8,6 +8,7 @@ import {
 } from "../../firebase/firebaseService";
 import { notification } from "../../utils/notification";
 import { useFirebaseCollection } from "../../utils/useFirebaseCollection";
+import { updateProfileImage } from "../../redux/actions/authActions";
 
 import ImageUploadWidget from "../helpers/ImageUploadWidget";
 import ImageItem from "./ImageItem";
@@ -16,6 +17,7 @@ const ImageComponent = ({ isCurrentUser }) => {
   const [addMode, setAddMode] = useState(false);
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const { currentUser } = useSelector((state) => state.auth);
 
@@ -29,6 +31,7 @@ const ImageComponent = ({ isCurrentUser }) => {
     setIsLoading(true);
     try {
       await deleteImageFromProfile(image);
+      dispatch(updateProfileImage(null));
       setIsLoading(false);
       notification("Image deleted successfully!");
     } catch (error) {
@@ -41,6 +44,7 @@ const ImageComponent = ({ isCurrentUser }) => {
     setIsLoading(true);
     try {
       await setImageAsMain(image);
+      dispatch(updateProfileImage(image.url));
       setIsLoading(false);
       notification("Image changed as main!");
     } catch (error) {

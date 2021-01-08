@@ -8,6 +8,7 @@ export const CLOSE_MODAL = "CLOSE_MODAL";
 
 export const SIGN_IN = "SIGN_IN";
 export const SIGN_OUT = "SIGN_OUT";
+export const UPDATE_IMAGE = "UPDATE_IMAGE";
 
 export const SET_CATEGORY = "SET_CATEGORY";
 

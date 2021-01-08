@@ -24,11 +24,7 @@ const ProfileContent = ({ profile, isCurrentUser }) => {
   return (
     <>
       {isCurrentUser ? (
-        <Tab
-          panes={panes}
-          menu={{ secondary: true, pointing: true }}
-          activeIndex={1}
-        />
+        <Tab panes={panes} menu={{ secondary: true, pointing: true }} />
       ) : (
         <></>
       )}

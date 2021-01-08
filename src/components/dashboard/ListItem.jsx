@@ -3,15 +3,21 @@ import { Link } from "react-router-dom";
 import { Item, Segment, Icon, List, Button, Label } from "semantic-ui-react";
 
 import { deleteItemFromFirebase } from "../../firebase/firebaseService";
-
 import ListMember from "./ListMember";
+import userImg from "../../images/user.png";
 
 const ListItem = ({ item }) => {
   return (
     <Segment.Group>
       <Segment textAlign="center">
         <Item>
-          <Item.Image size="tiny" circular src={item.ownerPhoto} />
+          <Item.Image
+            as={Link}
+            to={`/profile/${item.ownerUid}`}
+            size="tiny"
+            circular
+            src={item.ownerPhoto || userImg}
+          />
           <Item.Content>
             <Item.Header>{item.title}</Item.Header>
             <Item.Description>{item.owner}</Item.Description>

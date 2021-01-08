@@ -17,6 +17,7 @@ const ItemDetail = ({ match }) => {
   const item = useSelector((state) =>
     state.item.items.find((item) => item.id === match.params.id)
   );
+  const { currentUser } = useSelector((state) => state.auth);
   const { message: errorMessage } = useSelector((state) => state.error);
   const dispatch = useDispatch();
 
@@ -31,6 +32,9 @@ const ItemDetail = ({ match }) => {
     return <Loading />;
   }
 
+  const isOwner = item?.ownerUid === currentUser.uid;
+  const isMember = item?.members?.some((m) => m.id === currentUser.uid);
+
   if (errorMessage) {
     return <Redirect to="/error" />;
   }
@@ -38,12 +42,12 @@ const ItemDetail = ({ match }) => {
   return (
     <Grid>
       <Grid.Column width={12}>
-        <ItemHeader item={item} />
+        <ItemHeader item={item} isOwner={isOwner} isMember={isMember} />
         <ItemInfo item={item} />
         <ItemComment />
       </Grid.Column>
       <Grid.Column width={4}>
-        <AdditionalSideInfo members={item.members} />
+        <AdditionalSideInfo members={item.members} ownerUid={item.ownerUid} />
       </Grid.Column>
     </Grid>
   );

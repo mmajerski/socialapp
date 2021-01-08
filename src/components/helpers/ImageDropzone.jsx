@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
-import { Button } from "semantic-ui-react";
 
 const baseStyle = {
   flex: 1,

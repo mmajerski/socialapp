@@ -32,22 +32,19 @@ export const getPhotosListener = (uid) => {
 };
 
 export const addItemToFirebase = (item) => {
+  const user = firebase.auth().currentUser;
+
   return db.collection("items").add({
     ...item,
-    owner: "Mike",
-    ownerPhoto: "https://randomuser.me/api/portraits/men/2.jpg",
-    members: firebase.firestore.FieldValue.arrayUnion(
-      {
-        id: "a",
-        name: "Mike",
-        photoURL: "https://randomuser.me/api/portraits/men/2.jpg"
-      },
-      {
-        id: "b",
-        name: "Jane",
-        photoURL: "https://randomuser.me/api/portraits/women/11.jpg"
-      }
-    )
+    ownerUid: user.uid,
+    owner: user.displayName,
+    ownerPhoto: user.photoURL || null,
+    members: firebase.firestore.FieldValue.arrayUnion({
+      id: user.uid,
+      name: user.displayName,
+      photoURL: user.photoURL || null
+    }),
+    memberIds: firebase.firestore.FieldValue.arrayUnion(user.uid)
   });
 };
 
@@ -134,6 +131,7 @@ export const deleteImageFromProfile = async (image) => {
     .doc(user.uid)
     .collection("photos")
     .doc(image.id);
+
   try {
     const userPhotosDoc = await userPgotosDocRef.get();
     const userPhotosDocId = userPhotosDoc.id;
@@ -162,6 +160,39 @@ export const setImageAsMain = async (image) => {
       .collection("users")
       .doc(user.uid)
       .update({ photoURL: image.url });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const makeUserMember = (item) => {
+  const user = firebase.auth().currentUser;
+  return db
+    .collection("items")
+    .doc(item.id)
+    .update({
+      members: firebase.firestore.FieldValue.arrayUnion({
+        id: user.uid,
+        name: user.displayName,
+        photoURL: user.photoURL || null
+      }),
+      memberIds: firebase.firestore.FieldValue.arrayUnion(user.uid)
+    });
+};
+
+export const cancelUserMember = async (item) => {
+  const user = firebase.auth().currentUser;
+  try {
+    const itemDoc = await db.collection("items").doc(item.id).get();
+    return db
+      .collection("items")
+      .doc(item.id)
+      .update({
+        members: itemDoc
+          .data()
+          .members.filter((member) => member.id !== user.uid),
+        memberIds: firebase.firestore.FieldValue.arrayRemove(user.uid)
+      });
   } catch (error) {
     throw error;
   }

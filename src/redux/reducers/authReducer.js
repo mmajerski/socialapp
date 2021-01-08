@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_OUT } from "../types";
+import { SIGN_IN, SIGN_OUT, UPDATE_IMAGE } from "../types";
 
 const INITIAL_STATE = {
   authenticated: false,
@@ -21,6 +21,12 @@ const authReducer = (state = INITIAL_STATE, { type, payload }) => {
       };
     case SIGN_OUT: {
       return { ...state, authenticated: false, currentUser: null };
+    }
+    case UPDATE_IMAGE: {
+      return {
+        ...state,
+        currentUser: { ...state.currentUser, ownerPhoto: payload }
+      };
     }
     default:
       return state;

@@ -1,4 +1,4 @@
-import { APP_INIT, SIGN_IN, SIGN_OUT } from "../types";
+import { APP_INIT, SIGN_IN, SIGN_OUT, UPDATE_IMAGE } from "../types";
 import firebase from "../../firebaseConfig/firebase";
 
 export const signIn = (user) => {
@@ -25,5 +25,12 @@ export const checkAuth = () => {
 export const signOut = () => {
   return {
     type: SIGN_OUT
+  };
+};
+
+export const updateProfileImage = (image) => {
+  return {
+    type: UPDATE_IMAGE,
+    payload: image
   };
 };

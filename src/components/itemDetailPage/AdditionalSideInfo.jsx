@@ -1,7 +1,10 @@
 import React from "react";
-import { Segment, Item } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import { Segment, Item, Label } from "semantic-ui-react";
 
-const AdditionalSideInfo = ({ members }) => {
+import userImg from "../../images/user.png";
+
+const AdditionalSideInfo = ({ members, ownerUid }) => {
   return (
     <>
       <Segment
@@ -18,10 +21,23 @@ const AdditionalSideInfo = ({ members }) => {
         {members.map((member) => {
           return (
             <Item
+              as={Link}
+              to={`/profile/${member.id}`}
               key={member.id}
               style={{ position: "relative", marginBottom: "1rem" }}
             >
-              <Item.Image circular size="tiny" src={member.photoURL} />
+              {ownerUid === member.id && (
+                <Label
+                  style={{ display: "block" }}
+                  color="green"
+                  content="owner"
+                />
+              )}
+              <Item.Image
+                circular
+                size="tiny"
+                src={member.photoURL || userImg}
+              />
               <Item.Content verticalAlign="middle">
                 <Item.Header as="h3">
                   <p>{member.name}</p>
