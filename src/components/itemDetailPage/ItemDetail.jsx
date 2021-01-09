@@ -32,8 +32,8 @@ const ItemDetail = ({ match }) => {
     return <Loading />;
   }
 
-  const isOwner = item?.ownerUid === currentUser.uid;
-  const isMember = item?.members?.some((m) => m.id === currentUser.uid);
+  const isOwner = item?.ownerUid === currentUser?.uid;
+  const isMember = item?.members?.some((m) => m.id === currentUser?.uid);
 
   if (errorMessage) {
     return <Redirect to="/error" />;
@@ -42,9 +42,18 @@ const ItemDetail = ({ match }) => {
   return (
     <Grid>
       <Grid.Column width={12}>
-        <ItemHeader item={item} isOwner={isOwner} isMember={isMember} />
+        <ItemHeader
+          item={item}
+          isOwner={isOwner}
+          isMember={isMember}
+          currentUser={currentUser}
+        />
         <ItemInfo item={item} />
-        <ItemComment />
+        <ItemComment
+          isMember={isMember}
+          currentUser={currentUser}
+          itemId={item.id}
+        />
       </Grid.Column>
       <Grid.Column width={4}>
         <AdditionalSideInfo members={item.members} ownerUid={item.ownerUid} />

@@ -18,7 +18,7 @@ const Account = () => {
   const { currentUser } = useSelector((state) => state.auth);
 
   if (!currentUser) {
-    return <Loading />;
+    return <Loading content="You are signed out!" />;
   }
   return (
     <Segment>

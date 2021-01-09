@@ -5,8 +5,11 @@ import { Item, Segment, Icon, List, Button, Label } from "semantic-ui-react";
 import { deleteItemFromFirebase } from "../../firebase/firebaseService";
 import ListMember from "./ListMember";
 import userImg from "../../images/user.png";
+import { useSelector } from "react-redux";
 
 const ListItem = ({ item }) => {
+  const { currentUser } = useSelector((state) => state.auth);
+
   return (
     <Segment.Group>
       <Segment textAlign="center">
@@ -56,9 +59,11 @@ const ListItem = ({ item }) => {
         <div>{item.description}</div>
       </Segment>
       <Segment style={{ display: "flex", justifyContent: "space-between" }}>
-        <Button color="red" onClick={() => deleteItemFromFirebase(item.id)}>
-          Delete
-        </Button>
+        {currentUser?.uid === item.ownerUid && (
+          <Button color="red" onClick={() => deleteItemFromFirebase(item.id)}>
+            Delete
+          </Button>
+        )}
         <Button color="blue" as={Link} to={`/items/${item.id}`}>
           Check Out More
         </Button>

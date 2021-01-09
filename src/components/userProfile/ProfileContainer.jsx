@@ -25,8 +25,7 @@ const ProfileContainer = ({ match }) => {
 
   if (
     (loading && !selectedUserProfile) ||
-    (!selectedUserProfile && !errorMessage) ||
-    !currentUser
+    (!selectedUserProfile && !errorMessage)
   ) {
     return <Loading />;
   }
@@ -39,11 +38,13 @@ const ProfileContainer = ({ match }) => {
     <>
       <ProfileHeader
         profile={selectedUserProfile}
-        isCurrentUser={currentUser.uid === selectedUserProfile.id}
+        isCurrentUser={currentUser?.uid === selectedUserProfile.id}
+        currentUser={currentUser}
       />
       <ProfileContent
         profile={selectedUserProfile}
-        isCurrentUser={currentUser.uid === selectedUserProfile.id}
+        isCurrentUser={currentUser?.uid === selectedUserProfile.id}
+        match={match}
       />
     </>
   );

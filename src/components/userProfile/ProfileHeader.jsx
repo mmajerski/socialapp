@@ -10,7 +10,7 @@ import {
 
 import userImg from "../../images/user.png";
 
-const ProfileHeader = ({ profile, isCurrentUser }) => {
+const ProfileHeader = ({ profile, isCurrentUser, currentUser }) => {
   return (
     <>
       <Segment textAlign="center">
@@ -33,7 +33,7 @@ const ProfileHeader = ({ profile, isCurrentUser }) => {
             <Statistic.Value>15</Statistic.Value>
             <Statistic.Label>Following</Statistic.Label>
           </Statistic>
-          {!isCurrentUser && (
+          {!isCurrentUser && currentUser && (
             <>
               <Divider />
               <Reveal animated="move down">

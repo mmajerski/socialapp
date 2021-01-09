@@ -8,7 +8,7 @@ import {
 
 import { notification } from "../../utils/notification";
 
-const ItemHeader = ({ item, isOwner, isMember }) => {
+const ItemHeader = ({ item, isOwner, isMember, currentUser }) => {
   const [loading, setLoading] = useState(false);
 
   const makeUserMemberHandler = async () => {
@@ -38,7 +38,7 @@ const ItemHeader = ({ item, isOwner, isMember }) => {
   return (
     <Segment.Group>
       <Segment basic attached="top" style={{ padding: "0" }}>
-        <Image src={item.categoryImg} fluid />
+        <Image src={item.imageURL} fluid />
 
         <Segment basic textAlign="center">
           <Item>
@@ -56,41 +56,45 @@ const ItemHeader = ({ item, isOwner, isMember }) => {
         </Segment>
       </Segment>
 
-      <Segment
-        attached="bottom"
-        style={{ display: "flex", justifyContent: "space-between" }}
-      >
-        {isOwner && (
-          <Button inverted color="brown" as={Link} to={`/settings/${item.id}`}>
-            Settings
-          </Button>
-        )}
-        {!isOwner && (
-          <>
-            {isMember ? (
-              <Button
-                loading={loading}
-                disabled={loading}
-                onClick={cancelUserMemberHandler}
-                inverted
-                color="red"
-              >
-                Cancel
-              </Button>
-            ) : (
-              <Button
-                loading={loading}
-                disabled={loading}
-                onClick={makeUserMemberHandler}
-                inverted
-                color="violet"
-              >
-                JOIN
-              </Button>
-            )}
-          </>
-        )}
-      </Segment>
+      {currentUser && (
+        <Segment attached="bottom" textAlign="center">
+          {isOwner && (
+            <Button
+              inverted
+              color="brown"
+              as={Link}
+              to={`/settings/${item.id}`}
+            >
+              Settings
+            </Button>
+          )}
+          {!isOwner && !item.isCancelled && (
+            <>
+              {isMember ? (
+                <Button
+                  loading={loading}
+                  disabled={loading}
+                  onClick={cancelUserMemberHandler}
+                  inverted
+                  color="red"
+                >
+                  Cancel
+                </Button>
+              ) : (
+                <Button
+                  loading={loading}
+                  disabled={loading}
+                  onClick={makeUserMemberHandler}
+                  inverted
+                  color="violet"
+                >
+                  JOIN
+                </Button>
+              )}
+            </>
+          )}
+        </Segment>
+      )}
     </Segment.Group>
   );
 };

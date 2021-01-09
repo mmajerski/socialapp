@@ -197,3 +197,30 @@ export const cancelUserMember = async (item) => {
     throw error;
   }
 };
+
+// Comments
+export const addComment = (itemId, values) => {
+  const user = firebase.auth().currentUser;
+  const newComment = {
+    username: user.displayName,
+    photoURL: user.photoURL,
+    uid: user.uid,
+    text: values.comment,
+    dateString: `${new Date()}`,
+    parentId: values.parentId
+  };
+
+  return firebase.database().ref(`comments/${itemId}`).push(newComment);
+};
+
+export const itemCommentsRef = (itemId) => {
+  return firebase.database().ref(`comments/${itemId}`).orderByKey();
+};
+
+export const readComments = (itemId) => {
+  return firebase
+    .database()
+    .ref(`comments/${itemId}`)
+    .orderByKey()
+    .once("value");
+};

@@ -7,7 +7,7 @@ import { getItemsListener } from "../../firebase/firebaseService";
 import { setCategoryRedux } from "../../redux/actions/categoryActions";
 
 import Filters from "./Filters";
-import List from "./List";
+import ListComponent from "./List";
 import { useFirebaseCollection } from "../../utils/useFirebaseCollection";
 import Loading from "../../layout/Loading";
 
@@ -44,7 +44,7 @@ const Dashboard = () => {
     <Grid>
       <Grid.Column floated="left" width={10}>
         {itemsToRender.length > 0 ? (
-          <List data={itemsToRender} />
+          <ListComponent data={itemsToRender} />
         ) : (
           <p>There is no item to display.</p>
         )}

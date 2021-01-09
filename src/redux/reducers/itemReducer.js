@@ -1,7 +1,14 @@
-import { CREATE_ITEM, DELETE_ITEM, GET_ITEMS, UPDATE_ITEM } from "../types";
+import {
+  COMMENT_LISTENER,
+  CREATE_ITEM,
+  DELETE_ITEM,
+  GET_ITEMS,
+  UPDATE_ITEM
+} from "../types";
 
 const INITIAL_STATE = {
-  items: []
+  items: [],
+  comments: []
 };
 
 const itemReducer = (state = INITIAL_STATE, { type, payload }) => {
@@ -26,6 +33,9 @@ const itemReducer = (state = INITIAL_STATE, { type, payload }) => {
         ...state,
         items: [...payload]
       };
+    case COMMENT_LISTENER: {
+      return { ...state, comments: payload };
+    }
     default:
       return state;
   }

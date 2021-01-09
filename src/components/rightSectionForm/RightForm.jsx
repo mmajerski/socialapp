@@ -37,6 +37,7 @@ const RightForm = ({ match, history }) => {
   );
   const { loading } = useSelector((state) => state.loader);
   const { message: errorMessage } = useSelector((state) => state.error);
+  const { currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const initialFormState = selectedItem || {
@@ -45,6 +46,7 @@ const RightForm = ({ match, history }) => {
     city: { address: "", latLng: null },
     street: { address: "", latLng: null },
     category: "",
+    imageURL: "",
     date: ""
   };
 
@@ -58,6 +60,7 @@ const RightForm = ({ match, history }) => {
       address: Yup.string().required("Street is required")
     }),
     category: Yup.string().required("Category is required"),
+    imageURL: Yup.string(),
     date: Yup.string().required("Date is required")
   });
 
@@ -85,6 +88,14 @@ const RightForm = ({ match, history }) => {
     dependencies: [match.params.id],
     shouldExecute: !!match.params.id
   });
+
+  if (!currentUser) {
+    return <Loading content="You are signed out!" />;
+  }
+
+  if (match.params.id && currentUser.uid !== selectedItem?.ownerUid) {
+    return <Loading content="forbidden" />;
+  }
 
   if (loading) {
     return <Loading />;
@@ -142,6 +153,17 @@ const RightForm = ({ match, history }) => {
                 name="category"
                 options={categories}
               />
+              <FormField>
+                <Field placeholder="Image URL" name="imageURL" />
+                <ErrorMessage
+                  name="imageURL"
+                  render={(error) => (
+                    <Label basic color="red">
+                      {error}
+                    </Label>
+                  )}
+                />
+              </FormField>
               <FormField>
                 <Field placeholder="Date" name="date" type="date" />
                 <ErrorMessage
