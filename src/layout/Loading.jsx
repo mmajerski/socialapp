@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { Button, Dimmer, Loader } from "semantic-ui-react";
@@ -48,6 +48,7 @@ const Loading = ({ content = "Loading..." }) => {
     return (
       <Dimmer active>
         <p>You do not have rights to perform this action!</p>
+        <p>Please log in.</p>
         <Button
           basic
           inverted

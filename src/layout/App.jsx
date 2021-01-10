@@ -16,6 +16,7 @@ import ModalHandler from "../components/modal/ModalHandler";
 import Error from "../components/error/Error";
 import Account from "../components/auth/Account";
 import ProfileContainer from "../components/userProfile/ProfileContainer";
+import PrivateRoute from "./PrivateRoute";
 
 function App() {
   const { key } = useLocation();
@@ -43,14 +44,14 @@ function App() {
             <Switch>
               <Route path="/items/:id" component={ItemDetail} />
               <Route path="/items" component={Dashboard} />
-              <Route path="/test" component={Playground} />
-              <Route
+              {/* <Route path="/test" component={Playground} /> */}
+              <PrivateRoute
                 key={key}
                 path={["/createItem", "/settings/:id"]}
                 component={RightForm}
               />
-              <Route path="/account" component={Account} />
-              <Route path="/profile/:id" component={ProfileContainer} />
+              <PrivateRoute path="/account" component={Account} />
+              <PrivateRoute path="/profile/:id" component={ProfileContainer} />
               <Route path="/error" component={Error} />
             </Switch>
           </Container>

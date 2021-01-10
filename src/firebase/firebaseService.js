@@ -96,10 +96,10 @@ export const updateUserProfile = async (profile) => {
   }
 };
 
-export const uploadImage = (file, filename) => {
+export const uploadImage = (blob, filename) => {
   const user = firebase.auth().currentUser;
   const storageRef = firebase.storage().ref();
-  return storageRef.child(`${user.uid}/images/${filename}`).put(file);
+  return storageRef.child(`${user.uid}/images/${filename}`).put(blob);
 };
 
 export const updateUserProfileWithImage = async (downloadURL, filename) => {

@@ -7,7 +7,7 @@ import "firebase/database";
 import "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC_X7aTZMOcb0RN8iZ6GL78yt5231s6fGo",
+  apiKey: process.env.REACT_APP_API_KEY,
   authDomain: "socialapp-db2.firebaseapp.com",
   databaseURL: "https://socialapp-db2-default-rtdb.firebaseio.com",
   projectId: "socialapp-db2",

@@ -20,12 +20,7 @@ const AdditionalSideInfo = ({ members, ownerUid }) => {
       <Segment attached textAlign="center">
         {members.map((member) => {
           return (
-            <Item
-              as={Link}
-              to={`/profile/${member.id}`}
-              key={member.id}
-              style={{ position: "relative", marginBottom: "1rem" }}
-            >
+            <Item as={Link} to={`/profile/${member.id}`} key={member.id}>
               {ownerUid === member.id && (
                 <Label
                   style={{ display: "block" }}
@@ -40,7 +35,7 @@ const AdditionalSideInfo = ({ members, ownerUid }) => {
               />
               <Item.Content verticalAlign="middle">
                 <Item.Header as="h3">
-                  <p>{member.name}</p>
+                  <p style={{ marginBottom: "1rem" }}>{member.name}</p>
                 </Item.Header>
               </Item.Content>
             </Item>
