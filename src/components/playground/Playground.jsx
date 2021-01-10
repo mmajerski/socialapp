@@ -14,7 +14,8 @@ const Playground = () => {
   return (
     <>
       <h1>Test</h1>
-      <p>{count}</p>
+
+      {count}
       <button onClick={() => dispatch(increment())}>CLICK</button>
 
       <div>

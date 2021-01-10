@@ -57,6 +57,8 @@ const AddCommentForm = ({ itemId, parentId, closeForm }) => {
                       labelPosition="left"
                       icon="edit"
                       primary
+                      disabled={isSubmitting}
+                      loading={isSubmitting}
                       type="button"
                       onClick={() => {
                         isValid && handleSubmit();

@@ -199,6 +199,7 @@ export const cancelUserMember = async (item) => {
 };
 
 // Comments
+
 export const addComment = (itemId, values) => {
   const user = firebase.auth().currentUser;
   const newComment = {
@@ -223,4 +224,75 @@ export const readComments = (itemId) => {
     .ref(`comments/${itemId}`)
     .orderByKey()
     .once("value");
+};
+
+// Followers / following
+
+export const followUser = async (profile) => {
+  const user = firebase.auth().currentUser;
+  const batch = db.batch();
+
+  try {
+    batch.set(
+      db
+        .collection("following")
+        .doc(user.uid)
+        .collection("userFollowings")
+        .doc(profile.id),
+      {
+        displayName: profile.displayName,
+        photoURL: profile.photoURL,
+        uid: profile.id
+      }
+    );
+
+    batch.update(db.collection("users").doc(user.uid), {
+      followingCount: firebase.firestore.FieldValue.increment(1)
+    });
+
+    return await batch.commit();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const unfollowUser = async (profile) => {
+  const user = firebase.auth().currentUser;
+  const batch = db.batch();
+
+  try {
+    batch.delete(
+      db
+        .collection("following")
+        .doc(user.uid)
+        .collection("userFollowings")
+        .doc(profile.id)
+    );
+
+    batch.update(db.collection("users").doc(user.uid), {
+      followingCount: firebase.firestore.FieldValue.increment(-1)
+    });
+
+    return await batch.commit();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getFollowersCollection = (profileId) => {
+  return db.collection("following").doc(profileId).collection("userFollowers");
+};
+
+export const getFollowingCollection = (profileId) => {
+  return db.collection("following").doc(profileId).collection("userFollowings");
+};
+
+export const getFollowingDoc = (profileId) => {
+  const userUid = firebase.auth().currentUser.uid;
+  return db
+    .collection("following")
+    .doc(userUid)
+    .collection("userFollowings")
+    .doc(profileId)
+    .get();
 };

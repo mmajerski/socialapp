@@ -10,7 +10,7 @@ const Navbar = () => {
   const { authenticated } = useSelector((state) => state.auth);
 
   return (
-    <Menu color="purple" fixed="top" inverted pointing secondary>
+    <Menu color="grey" fixed="top" inverted pointing secondary>
       <Container>
         <Menu.Item as={NavLink} exact to="/">
           Home

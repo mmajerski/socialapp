@@ -1,18 +1,21 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Menu, Dropdown, Image } from "semantic-ui-react";
 import { signOutUser } from "../../firebase/authService";
 
 import userImg from "../../images/user.png";
+import { CLEAR_FOLLOWINGS_ON_LEAVE } from "../../redux/types";
 import { notification } from "../../utils/notification";
 
 const SignedInMenu = () => {
   const { currentUser } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const logOutHandler = async () => {
     try {
       await signOutUser();
+      dispatch({ type: CLEAR_FOLLOWINGS_ON_LEAVE });
       notification("Successfully signed out!");
     } catch (error) {
       notification(error.message, "error");
