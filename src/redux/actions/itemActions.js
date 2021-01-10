@@ -1,8 +1,13 @@
 import {
+  extractDataFromDoc,
+  getItemsListener
+} from "../../firebase/firebaseService";
+import {
   COMMENT_LISTENER,
   CREATE_ITEM,
   DELETE_ITEM,
   GET_ITEMS,
+  SELECTED_ITEM_LISTENER,
   UPDATE_ITEM
 } from "../types";
 
@@ -27,10 +32,26 @@ export const deleteItem = (itemId) => {
   };
 };
 
-export const getItems = (items) => {
+export const getItems = (limit, lastDocSnapshot) => {
+  return async (dispatch) => {
+    const snapshot = await getItemsListener(limit, lastDocSnapshot).get();
+    const lastVisible = snapshot.docs[snapshot.docs.length - 1];
+    const moreItems = snapshot.docs.length >= limit;
+    const items = snapshot.docs.map((doc) => extractDataFromDoc(doc));
+
+    dispatch({
+      type: GET_ITEMS,
+      payload: { items, moreItems }
+    });
+
+    return lastVisible;
+  };
+};
+
+export const selectedItemListener = (item) => {
   return {
-    type: GET_ITEMS,
-    payload: items
+    type: SELECTED_ITEM_LISTENER,
+    payload: item
   };
 };
 

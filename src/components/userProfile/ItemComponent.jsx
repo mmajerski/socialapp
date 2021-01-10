@@ -10,7 +10,6 @@ import ListComponent from "../dashboard/List";
 const ItemComponent = ({ match }) => {
   const dispatch = useDispatch();
   const { items } = useSelector((state) => state.item);
-  const { currentUser } = useSelector((state) => state.auth);
 
   useFirebaseCollection({
     firestoreQuery: () => getItemsListener(),

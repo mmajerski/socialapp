@@ -11,19 +11,17 @@ import Loading from "../../layout/Loading";
 
 import { useFirebaseDocument } from "../../utils/useFirebaseDocument";
 import { getItemListener } from "../../firebase/firebaseService";
-import { getItems } from "../../redux/actions/itemActions";
+import { selectedItemListener } from "../../redux/actions/itemActions";
 
 const ItemDetail = ({ match }) => {
-  const item = useSelector((state) =>
-    state.item.items.find((item) => item.id === match.params.id)
-  );
+  const item = useSelector((state) => state.item.selectedItem);
   const { currentUser } = useSelector((state) => state.auth);
   const { message: errorMessage } = useSelector((state) => state.error);
   const dispatch = useDispatch();
 
   useFirebaseDocument({
     firestoreQuery: () => getItemListener(match.params.id),
-    onDataReceived: (item) => dispatch(getItems([item])),
+    onDataReceived: (item) => dispatch(selectedItemListener(item)),
     dependencies: [match.params.id],
     shouldExecute: true
   });

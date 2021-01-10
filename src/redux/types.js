@@ -2,6 +2,8 @@ export const CREATE_ITEM = "CREATE_ITEM";
 export const UPDATE_ITEM = "UPDATE_ITEM";
 export const DELETE_ITEM = "DELETE_ITEM";
 export const GET_ITEMS = "GET_ITEMS";
+export const SELECTED_ITEM_LISTENER = "SELECTED_ITEM_LISTENER";
+export const CLEAR_ITEMS = "CLEAR_ITEMS";
 
 export const OPEN_MODAL = "OPEN_MODAL";
 export const CLOSE_MODAL = "CLOSE_MODAL";

@@ -4,7 +4,6 @@ import * as Yup from "yup";
 
 import { notification } from "../../utils/notification";
 import { addComment } from "../../firebase/firebaseService";
-import CustomTextArea from "../helpers/CustomTextArea";
 import { Button, Loader } from "semantic-ui-react";
 
 const AddCommentForm = ({ itemId, parentId, closeForm }) => {

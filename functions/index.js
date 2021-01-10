@@ -63,6 +63,33 @@ exports.unfollowUserFunction = functions.firestore
     }
   });
 
+exports.updateFollowings = functions.firestore
+  .document("following/{profileId}/userFollowers/{userId}")
+  .onUpdate(async (snapshot, context) => {
+    try {
+      const userDoc = await db
+        .collection("users")
+        .doc(context.params.userId)
+        .get();
+      const batch = db.batch();
+
+      batch.update(
+        db
+          .collection("following")
+          .doc(context.params.profileId)
+          .collection("userFollowings")
+          .doc(context.params.userId),
+        {
+          photoURL: userDoc.data().photoURL
+        }
+      );
+
+      return await batch.commit();
+    } catch (error) {
+      return console.log(error);
+    }
+  });
+
 // exports.itemUpdated = functions.firestore
 //   .document("/items/{itemId}")
 //   .onUpdate(async (snapshot, context) => {

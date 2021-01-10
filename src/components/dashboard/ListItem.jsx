@@ -5,10 +5,13 @@ import { Item, Segment, Icon, List, Button, Label } from "semantic-ui-react";
 import { deleteItemFromFirebase } from "../../firebase/firebaseService";
 import ListMember from "./ListMember";
 import userImg from "../../images/user.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { notification } from "../../utils/notification";
+import { DELETE_ITEM } from "../../redux/types";
 
 const ListItem = ({ item }) => {
   const { currentUser } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   return (
     <Segment.Group>
@@ -60,7 +63,15 @@ const ListItem = ({ item }) => {
       </Segment>
       <Segment style={{ display: "flex", justifyContent: "space-between" }}>
         {currentUser?.uid === item.ownerUid && (
-          <Button color="red" onClick={() => deleteItemFromFirebase(item.id)}>
+          <Button
+            color="red"
+            onClick={() =>
+              deleteItemFromFirebase(item.id).then(() => {
+                dispatch({ type: DELETE_ITEM, payload: item.id });
+                notification("Item has been deleted!");
+              })
+            }
+          >
             Delete
           </Button>
         )}

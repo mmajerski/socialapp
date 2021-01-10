@@ -12,7 +12,7 @@ import {
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-import { getItems } from "../../redux/actions/itemActions";
+import { selectedItemListener } from "../../redux/actions/itemActions";
 import CustomTextArea from "../helpers/CustomTextArea";
 import CustomSelectInput from "../helpers/CustomSelectInput";
 
@@ -32,9 +32,7 @@ const RightForm = ({ match, history }) => {
   const [toggleActive, setToggleActive] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const selectedItem = useSelector((state) =>
-    state.item.items.find((item) => item.id === match.params.id)
-  );
+  const { selectedItem } = useSelector((state) => state.item);
   const { loading } = useSelector((state) => state.loader);
   const { message: errorMessage } = useSelector((state) => state.error);
   const { currentUser } = useSelector((state) => state.auth);
@@ -84,7 +82,7 @@ const RightForm = ({ match, history }) => {
 
   useFirebaseDocument({
     firestoreQuery: () => getItemListener(match.params.id),
-    onDataReceived: (item) => dispatch(getItems([item])),
+    onDataReceived: (item) => dispatch(selectedItemListener(item)),
     dependencies: [match.params.id],
     shouldExecute: !!match.params.id
   });
@@ -131,7 +129,7 @@ const RightForm = ({ match, history }) => {
           }
         }}
       >
-        {({ isValid, dirty, isSubmitting, values }) => {
+        {({ isValid, dirty, isSubmitting, values, resetForm }) => {
           return (
             <Form className="ui form">
               <FormField>

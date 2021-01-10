@@ -15,8 +15,12 @@ export const extractDataFromDoc = (doc) => {
   };
 };
 
-export const getItemsListener = () => {
-  return db.collection("items").orderBy("date");
+export const getItemsListener = (limit, lastDocSnapshot = null) => {
+  return db
+    .collection("items")
+    .orderBy("date")
+    .startAfter(lastDocSnapshot)
+    .limit(limit);
 };
 
 export const getItemListener = (itemId) => {
@@ -52,7 +56,9 @@ export const updateItemInFirebase = (item) => {
   return db.collection("items").doc(item.id).update(item);
 };
 
-export const deleteItemFromFirebase = (itemId) => {
+export const deleteItemFromFirebase = async (itemId) => {
+  await firebase.database().ref(`comments/${itemId}`).remove();
+
   return db.collection("items").doc(itemId).delete();
 };
 
@@ -154,12 +160,72 @@ export const deleteImageFromProfile = async (image) => {
 
 export const setImageAsMain = async (image) => {
   const user = firebase.auth().currentUser;
+  const itemDocQuery = db
+    .collection("items")
+    .where("memberIds", "array-contains", user.uid);
+  const userFollowingRef = db
+    .collection("following")
+    .doc(user.uid)
+    .collection("userFollowings");
+
+  const batch = db.batch();
+
+  batch.update(db.collection("users").doc(user.uid), { photoURL: image.url });
+
   try {
-    await user.updateProfile({ photoURL: image.url });
-    return await db
-      .collection("users")
-      .doc(user.uid)
-      .update({ photoURL: image.url });
+    const itemQuerySnap = await itemDocQuery.get();
+    for (let i = 0; i < itemQuerySnap.docs.length; i++) {
+      const itemDoc = itemQuerySnap.docs[i];
+      if (itemDoc.data().ownerUid === user.uid) {
+        batch.update(itemQuerySnap.docs[i].ref, {
+          ownerPhoto: image.url
+        });
+      }
+
+      batch.update(itemQuerySnap.docs[i].ref, {
+        members: itemDoc.data().members.filter((member) => {
+          if (member.id === user.uid) {
+            member.photoURL = image.url;
+          }
+
+          return member;
+        })
+      });
+    }
+
+    const userFollowingSnap = await userFollowingRef.get();
+
+    userFollowingSnap.docs.forEach((docRef) => {
+      const followingDocRef = db
+        .collection("following")
+        .doc(docRef.id)
+        .collection("userFollowers")
+        .doc(user.uid);
+      batch.update(followingDocRef, {
+        photoURL: image.url
+      });
+    });
+
+    // const followingIds = [];
+
+    // const userFollowersSnap = await userFollowingRef.get();
+
+    // userFollowersSnap.docs.forEach((docRef) => {
+    //   followingIds.push(docRef.id);
+    // });
+
+    // followingIds.forEach((id) => {
+    //   const followingDocRef = db
+    //     .collection("following")
+    //     .doc(id)
+    //     .collection("userFollowings")
+    //     .doc(user.uid);
+    //   batch.update(followingDocRef, { photoURL: image.url });
+    // });
+
+    await batch.commit();
+
+    return await user.updateProfile({ photoURL: image.url });
   } catch (error) {
     throw error;
   }
