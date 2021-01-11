@@ -7,9 +7,9 @@ This app was being created quite spontaneously so certain parts can be not consi
 **Stack**
 
 Basically React, Redux and Firebase.  
-Some Google services like Google maps or autocomplete.
-Also Formik was used quite heavily here.
-Semantic-UI-React was used for UI.
+Some Google services like Google maps or autocomplete.  
+Also Formik was used quite heavily here.  
+Semantic-UI-React was used for UI.  
 For dropping images, cropping images, displaying map, dealing with autocomplete I used third-party libraries.
 
 **Demo**:
@@ -17,4 +17,4 @@ For dropping images, cropping images, displaying map, dealing with autocomplete 
 ![](demo.gif)
 
 **Live**  
-[Live](https://socialapp-db2.firebaseapp.com/).
+[Live](https://socialapp-db2.firebaseapp.com/)
