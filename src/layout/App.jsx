@@ -11,7 +11,7 @@ import Navbar from "../components/navbar/Navbar";
 import RightForm from "../components/rightSectionForm/RightForm";
 
 import "./styles.css";
-import Playground from "../components/playground/Playground";
+// import Playground from "../components/playground/Playground";
 import ModalHandler from "../components/modal/ModalHandler";
 import Error from "../components/error/Error";
 import Account from "../components/auth/Account";
@@ -50,6 +50,7 @@ function App() {
                 path={["/createItem", "/settings/:id"]}
                 component={RightForm}
               />
+
               <PrivateRoute path="/account" component={Account} />
               <PrivateRoute path="/profile/:id" component={ProfileContainer} />
               <Route path="/error" component={Error} />

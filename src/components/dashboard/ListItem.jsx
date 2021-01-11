@@ -7,11 +7,16 @@ import ListMember from "./ListMember";
 import userImg from "../../images/user.png";
 import { useDispatch, useSelector } from "react-redux";
 import { notification } from "../../utils/notification";
-import { DELETE_ITEM } from "../../redux/types";
+import { DELETE_ITEM, RETAIN_STATE_CLEAR } from "../../redux/types";
+import Loading from "../../layout/Loading";
 
 const ListItem = ({ item }) => {
   const { currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+
+  if (!item) {
+    return <Loading />;
+  }
 
   return (
     <Segment.Group>
@@ -47,7 +52,7 @@ const ListItem = ({ item }) => {
       </Segment>
       <Segment color="teal" secondary>
         <List horizontal>
-          {item.members.length > 0 ? (
+          {item?.members?.length > 0 ? (
             item.members.map((member) => {
               return <ListMember key={member.id} member={member} />;
             })

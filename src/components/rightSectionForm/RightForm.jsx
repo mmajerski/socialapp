@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import {
@@ -12,7 +12,13 @@ import {
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-import { selectedItemListener } from "../../redux/actions/itemActions";
+import {
+  clearSelectedItem,
+  createItem,
+  getItems,
+  selectedItemListener,
+  updateItem
+} from "../../redux/actions/itemActions";
 import CustomTextArea from "../helpers/CustomTextArea";
 import CustomSelectInput from "../helpers/CustomSelectInput";
 
@@ -27,10 +33,12 @@ import {
 } from "../../firebase/firebaseService";
 import Loading from "../../layout/Loading";
 import { notification } from "../../utils/notification";
+import { RETAIN_STATE_CLEAR } from "../../redux/types";
 
-const RightForm = ({ match, history }) => {
+const RightForm = ({ match, history, location }) => {
   const [toggleActive, setToggleActive] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [active, setActive] = useState(false);
 
   const { selectedItem } = useSelector((state) => state.item);
   const { loading } = useSelector((state) => state.loader);
@@ -38,7 +46,16 @@ const RightForm = ({ match, history }) => {
   const { currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  const initialFormState = selectedItem || {
+  useEffect(() => {
+    if (location.pathname !== "/createItem") {
+      return;
+    }
+
+    // dispatch({ type: RETAIN_STATE_CLEAR });
+    dispatch(clearSelectedItem());
+  }, [dispatch, location.pathname]);
+
+  const emptyValues = {
     title: "",
     description: "",
     city: { address: "", latLng: null },
@@ -47,6 +64,11 @@ const RightForm = ({ match, history }) => {
     imageURL: "",
     date: ""
   };
+
+  const initialFormState =
+    location.pathname === "/createItem"
+      ? emptyValues
+      : selectedItem || emptyValues;
 
   const FormSchema = Yup.object().shape({
     title: Yup.string().required("Title is required"),
@@ -72,7 +94,7 @@ const RightForm = ({ match, history }) => {
       notification(
         `Item changed to ${
           selectedItem.isCancelled ? "active" : "inactive"
-        } state!`
+        } state! Just leave to apply changes!`
       );
     } catch (error) {
       setToggleActive(true);
@@ -84,8 +106,14 @@ const RightForm = ({ match, history }) => {
     firestoreQuery: () => getItemListener(match.params.id),
     onDataReceived: (item) => dispatch(selectedItemListener(item)),
     dependencies: [match.params.id],
-    shouldExecute: !!match.params.id
+    shouldExecute:
+      match.params.id === selectedItem?.id &&
+      location.pathname !== "/createItem"
   });
+
+  if (loading) {
+    return <Loading />;
+  }
 
   if (!currentUser) {
     return <Loading content="You are signed out!" />;
@@ -93,10 +121,6 @@ const RightForm = ({ match, history }) => {
 
   if (match.params.id && currentUser.uid !== selectedItem?.ownerUid) {
     return <Loading content="forbidden" />;
-  }
-
-  if (loading) {
-    return <Loading />;
   }
 
   if (errorMessage) {
@@ -109,20 +133,26 @@ const RightForm = ({ match, history }) => {
       <Formik
         initialValues={initialFormState}
         validationSchema={FormSchema}
-        onSubmit={async (values, { setSubmitting }) => {
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
           try {
             if (selectedItem) {
-              await updateItemInFirebase(values);
+              await updateItemInFirebase({
+                ...values,
+                isCancelled: selectedItem.isCancelled
+              });
+              dispatch(updateItem(values));
               setSubmitting(false);
               notification("Updated successfully!");
-              history.push("/items");
+              // history.push("/items");
+              resetForm();
               return;
             }
 
             await addItemToFirebase(values);
             setSubmitting(false);
             notification("Created successfully!");
-            history.push("/items");
+            // history.push("/items");
+            resetForm();
           } catch (error) {
             notification(error.message, "error");
             setSubmitting(false);
@@ -182,17 +212,7 @@ const RightForm = ({ match, history }) => {
               >
                 Cancel
               </Button>
-              {selectedItem && (
-                <Button
-                  loading={toggleActive}
-                  type="button"
-                  floated="right"
-                  color={selectedItem.isCancelled ? "green" : "red"}
-                  onClick={() => setConfirmOpen(true)}
-                >
-                  {selectedItem.isCancelled ? "Reactivate" : "Deactivate"}
-                </Button>
-              )}
+
               <Button
                 type="submit"
                 floated="left"
@@ -206,6 +226,17 @@ const RightForm = ({ match, history }) => {
           );
         }}
       </Formik>
+      {selectedItem && (
+        <Button
+          loading={toggleActive}
+          type="button"
+          floated="right"
+          color={selectedItem.isCancelled ? "green" : "red"}
+          onClick={() => setConfirmOpen(true)}
+        >
+          {selectedItem.isCancelled ? "Reactivate" : "Deactivate"}
+        </Button>
+      )}
       <Confirm
         open={confirmOpen}
         onCancel={() => setConfirmOpen(false)}

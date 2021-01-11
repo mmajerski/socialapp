@@ -31,6 +31,7 @@ const ProfileContainer = ({ match }) => {
   }
 
   if (errorMessage) {
+    console.log(errorMessage);
     return <Redirect to="/error" />;
   }
 

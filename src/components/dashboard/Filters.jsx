@@ -14,10 +14,7 @@ const newCategories = [
   ...JSON.parse(JSON.stringify(categories))
 ];
 
-const Filters = () => {
-  const [category, setCategory] = useState("");
-  const dispatch = useDispatch();
-
+const Filters = ({ setCategory, category }) => {
   return (
     <>
       <Segment textAlign="center">
@@ -32,7 +29,6 @@ const Filters = () => {
             value={category}
             onChange={(e, data) => {
               setCategory(data.value);
-              dispatch(setCategoryRedux(data.value));
             }}
           />
         </Menu.Item>

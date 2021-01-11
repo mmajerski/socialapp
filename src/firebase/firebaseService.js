@@ -68,6 +68,10 @@ export const cancelItem = (item) => {
   });
 };
 
+export const getAllItems = () => {
+  return db.collection("items");
+};
+
 export const setUserProfile = (user) => {
   return db
     .collection("users")

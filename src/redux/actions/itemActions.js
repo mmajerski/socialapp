@@ -6,7 +6,9 @@ import {
   COMMENT_LISTENER,
   CREATE_ITEM,
   DELETE_ITEM,
+  GET_ALL_ITEMS,
   GET_ITEMS,
+  SELECTED_ITEM_CLEAR,
   SELECTED_ITEM_LISTENER,
   UPDATE_ITEM
 } from "../types";
@@ -41,10 +43,15 @@ export const getItems = (limit, lastDocSnapshot) => {
 
     dispatch({
       type: GET_ITEMS,
-      payload: { items, moreItems }
+      payload: { items, moreItems, lastVisible }
     });
+  };
+};
 
-    return lastVisible;
+export const getAllItemsAction = (items) => {
+  return {
+    type: GET_ALL_ITEMS,
+    payload: items
   };
 };
 
@@ -52,6 +59,12 @@ export const selectedItemListener = (item) => {
   return {
     type: SELECTED_ITEM_LISTENER,
     payload: item
+  };
+};
+
+export const clearSelectedItem = () => {
+  return {
+    type: SELECTED_ITEM_CLEAR
   };
 };
 

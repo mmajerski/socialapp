@@ -16,6 +16,8 @@ const store = createStore(
   )
 );
 
+// const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+
 store.dispatch(checkAuth());
 
 export default store;
