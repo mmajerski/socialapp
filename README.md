@@ -9,6 +9,8 @@ This app was being created quite spontaneously so certain parts can be not consi
 Basically React, Redux and Firebase.  
 Some Google services like Google maps or autocomplete.
 Also Formik was used quite heavily here.
+Semantic-UI-React was used for UI.
+For dropping images, cropping images, displaying map, dealing with autocomplete I used third-party libraries.
 
 **Demo**:
 
