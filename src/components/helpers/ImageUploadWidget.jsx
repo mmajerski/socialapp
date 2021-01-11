@@ -81,23 +81,31 @@ const ImageUploadWidget = ({ setAddMode }) => {
                 margin: "0 auto"
               }}
             ></div>
-            <Button
-              inverted
-              color="red"
-              onClick={handleCancelCrop}
-              loading={loading}
-              disabled={loading}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "2rem"
+              }}
             >
-              Cancel
-            </Button>
-            <Button
-              inverted
-              color="green"
-              onClick={handleUploadImage}
-              loading={loading}
-            >
-              Accept
-            </Button>
+              <Button
+                inverted
+                color="red"
+                onClick={handleCancelCrop}
+                loading={loading}
+                disabled={loading}
+              >
+                Cancel
+              </Button>
+              <Button
+                inverted
+                color="green"
+                onClick={handleUploadImage}
+                loading={loading}
+              >
+                Accept
+              </Button>
+            </div>
           </>
         )}
       </Segment>

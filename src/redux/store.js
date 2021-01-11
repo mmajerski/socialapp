@@ -1,22 +1,22 @@
 import { createStore, applyMiddleware } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
+// import { composeWithDevTools } from "redux-devtools-extension";
 import ReduxThunk from "redux-thunk";
-import logger from "redux-logger";
+// import logger from "redux-logger";
 
 import rootReducer from "./reducers";
 import { checkAuth } from "./actions/authActions";
 
-const middleware = [ReduxThunk, logger];
+// const middleware = [ReduxThunk, logger];
 
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(
-    applyMiddleware(...middleware)
-    // other store enhancers if any
-  )
-);
+// const store = createStore(
+//   rootReducer,
+//   composeWithDevTools(
+//     applyMiddleware(...middleware)
+//     // other store enhancers if any
+//   )
+// );
 
-// const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 store.dispatch(checkAuth());
 
