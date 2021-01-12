@@ -72,7 +72,7 @@ const ListItem = ({ item }) => {
             color="red"
             onClick={() =>
               deleteItemFromFirebase(item.id).then(() => {
-                dispatch({ type: DELETE_ITEM, payload: item.id });
+                // dispatch({ type: DELETE_ITEM, payload: item.id });
                 notification("Item has been deleted!");
               })
             }
